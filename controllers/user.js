@@ -41,8 +41,8 @@ exports.register = asyncHandler(async(req, res) => {
 
     if(user){
         const verifyToken = user.getSignedJwtToken();
-        const resetURL = `https://tender-lalande-27459e.netlify.app/tjkf/users/verify/${verifyToken}`
-        mailSender(resetURL, user, res, "Email Verification from TEAM JKF", "Verify your email address", "");
+        const resetURL = `https://team-jkf.netlify.app/verify/${verifyToken}`
+        mailSender(resetURL, user, res, "Team JKF: Email Verification", "Team JKF: Email Verification", "You must confirm/validate your Email Account before logging in.");
         console.log(verifyToken);
     }else{
         res.status(400);
@@ -63,7 +63,7 @@ exports.verifyUser = asyncHandler(async(req, res) => {
             },
             (response,err)=>{
                 User.findById(id).then((user)=>{
-                    return res.status(200).json({success : true, data: generateToken(user._id)})
+                    mailSender("", user, res,"Team JKF: Email Verification Successful", "Team JKF: Email Verification Successful", "Your account is now verified at Team JKF." );
                 }).catch(err=> res.status(400).json({success : false, message: `${err}`}))
             }
         )
@@ -76,7 +76,7 @@ exports.resendVerificationLink = asyncHandler(async(req, res) => {
     if(user){
         const verifyToken = user.getSignedJwtToken();
         const resetURL = `https://tender-lalande-27459e.netlify.app/tjkf/users/verify/${verifyToken}`
-        mailSender(resetURL, user, res, "Email Verification from TEAM JKF", "Verify your email address", "")
+        mailSender(resetURL, user, res, "Team JKF: Email Verification", "Team JKF: Email Verification", "You must confirm/validate your Email Account before logging in.")
     }else{
         res.status(400);
         throw new Error(`Invalid User data`);
@@ -154,7 +154,7 @@ exports.updatePassword = asyncHandler(async(req, res) => {
 });
 
 exports.updateProfile = asyncHandler(async(req, res) => {
-    const {email, firstname, lastname, state, statecode, lga, phone, gender, username} = req.body
+    const {email, firstname, lastname, state, statecode, lga, phone, gender, username, maritalStatus, educationStatus, employmentStatus, politicalInterest, electoralParticipation } = req.body
     const user = await User.findById(req.user._id)
     if(user){
         try{
@@ -170,6 +170,11 @@ exports.updateProfile = asyncHandler(async(req, res) => {
                         lga : lga || user.lga,
                         phone : phone || user.phone,
                         gender : gender || user.gender,
+                        maritalStatus: maritalStatus || user.maritalStatus,
+                        educationStatus : educationStatus || user.educationStatus,
+                        employmentStatus : employmentStatus || user.employmentStatus,
+                        politicalInterest : politicalInterest || user.politicalInterest,
+                        electoralParticipation : electoralParticipation || user.electoralParticipation,
             }});
             res.json({
                 success : true,
@@ -204,8 +209,8 @@ exports.forgotPassword = asyncHandler(async(req, res) => {
                 },
                 (response,err)=>{
                     User.findById(user._id).then((user)=>{
-                        const resetURL = `https://tender-lalande-27459e.netlify.app/tjkf/users/resetPassword/${resetToken}`
-                        mailSender(resetURL, user, res,"Password Reset from TEAM JKF", "Reset your password", "You are receiving this mail because you or someone else has requested the reset of password" );
+                        const resetURL = `https://team-jkf.netlify.app/resetPassword/${resetToken}`
+                        mailSender(resetURL, user, res,"Team JKF: Reset Password", "Team JKF: Reset Password", "You are receiving this mail because you or someone else has requested the reset of password" );
                     })
                 }
             )
@@ -250,17 +255,29 @@ exports.resetPassword = asyncHandler(async(req, res) => {
     }
 })
 
+function messageToBeSent (title, resetURL, user){
+    if(title === "Team JKF: Email Verification"){
+        return `<p>Please click on the following link to successfully activate your account:<a style="color:#c4c423;" href=${resetURL}>click here</a></p>`
+    }else if(title === "Team JKF: Reset Password"){
+        return `<p>Please click on the following link to successfully reset your password:<a style="color:#c4c423;" href=${resetURL}>click here</a></p>`
+    }else if (title === "Team JKF: Email Verification Successful"){
+        return `<p>Unique ID: ${user.tjkfid}</p>`
+    }
+}
+
 function mailSender (resetURL, user, res, subject, title, body){
     sendMail({
         email: `${user.email}`,
         subject: `${subject}`,
-        html: `<div style="color:white;" >
-                    <div>
-                        <h1>${title}</h1>
-                        <h4>Hello ${user.firstname} ${user.lastname},</h4>
-                        <h4>${body}</h4>
-                        <h4>Proceed to ${title} by <a style="color:#c4c423;" href="${resetURL}">clicking this link</a> </h4>
+        html: `<div style="color:white;background-color:black" >
+                    <div style="padding:1rem" >
+                        <h3>${title}</h3>
+                        <p><b>Hi ${user.firstname} ${user.lastname}</b>,</p>
+                        <p${body}</p>
+                        ${messageToBeSent(title, resetURL, user)}
+                        <h4 style="padding-top:1rem" >Have a nice day!</h4>
                     </div>
-                </div>`
+                </div>
+                `
     }, res);
 }

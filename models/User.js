@@ -66,6 +66,26 @@ const UserSchema = new mongoose.Schema({
     },
     resetPasswordToken : String,
     resetPasswordExpire : Date,
+    maritalStatus : {
+        type: String,
+        enum : ['Married', 'Single', 'Widow', 'Widower', 'Divorced'],
+    },
+    educationStatus : {
+        type: String,
+        enum : ['Olevel', 'National Diploma', 'Higher National Diploma', 'BSc.', 'MSc.', "PHD"],
+    },
+    employmentStatus : {
+        type: String,
+        enum: ['Employed', 'Self Employed', 'Non-Employed'],
+    },
+    politicalInterest : {
+        type: String,
+        enum: ["Non Partisan", "Partisan", "Indifferent"]
+    },
+    electoralParticipation : {
+        type: String,
+        enum: ["Regularly", "Occassionally", "Indifferent"]
+    },
     createdAt : {
         type : Date,
         default : Date.now
