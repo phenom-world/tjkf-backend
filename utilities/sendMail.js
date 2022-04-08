@@ -24,6 +24,7 @@ exports.sendMail = async(details, res) => {
         res.status(200).json({success : true, message: `Email sent`})
         return result
     } catch (error) {
-        res.status(401).json({success : false, message: `Email not sent`})
+        res.status(401)
+        throw new Error(`Email not sent`);
     }
 }

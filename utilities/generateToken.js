@@ -11,7 +11,7 @@ exports.verifyToken = (token, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         return decoded.id;
     }catch(error){
-        console.log(error);
-        return res.status(404).json({success : false, message: `${error}`});
+        res.status(401)
+        throw new Error(`${error}`);
     }
 }

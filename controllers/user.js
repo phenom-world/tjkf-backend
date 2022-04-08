@@ -64,7 +64,10 @@ exports.verifyUser = asyncHandler(async(req, res) => {
             (response,err)=>{
                 User.findById(id).then((user)=>{
                     mailSender("", user, res,"Team JKF: Email Verification Successful", "Team JKF: Email Verification Successful", "Your account is now verified at Team JKF." );
-                }).catch(err=> res.status(400).json({success : false, message: `${err}`}))
+                }).catch(err=> {
+                    res.status(401)
+                    throw new Error(`${err}`);
+                })
             }
         )
     }
