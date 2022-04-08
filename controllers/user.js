@@ -141,15 +141,20 @@ exports.updatePassword = asyncHandler(async(req, res) => {
                         (response,err)=>{
                             User.findById(data._id).then((user)=>{
                                 return res.status(200).json({success : true, data: generateToken(user._id)})
+                            }).catch(err => {
+                                res.status(401)
+                                throw new Error(`${err}`);
                             })
                         }
                     )
                 }else {
-                    return res.status(401).json({success : false, message: `Incorrect credentials`})
+                    res.status(401)
+                    throw new Error(`Incorrect credentials`);
                 }
             })
         }else{
-            return res.status(404).json({success : false, message: `User not found`});
+            res.status(404)
+            throw new Error(`User not found`);
         }
         
     })
