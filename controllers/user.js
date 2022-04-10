@@ -41,7 +41,7 @@ exports.register = asyncHandler(async(req, res) => {
 
     if(user){
         const verifyToken = user.getSignedJwtToken();
-        const resetURL = `https://team-jkf.netlify.app/verify/${verifyToken}`
+        const resetURL = `https://team-jkf.netlify.app/tjkf/users/verify/${verifyToken}`
         mailSender(resetURL, user, res, "Team JKF: Email Verification", "Team JKF: Email Verification", "You must confirm/validate your Email Account before logging in.");
         console.log(verifyToken);
     }else{
@@ -78,7 +78,7 @@ exports.resendVerificationLink = asyncHandler(async(req, res) => {
     const user = await User.findOne({email});
     if(user){
         const verifyToken = user.getSignedJwtToken();
-        const resetURL = `https://tender-lalande-27459e.netlify.app/tjkf/users/verify/${verifyToken}`
+        const resetURL = `https://team-jkf.netlify.app/tjkf/users/verify/${verifyToken}`
         mailSender(resetURL, user, res, "Team JKF: Email Verification", "Team JKF: Email Verification", "You must confirm/validate your Email Account before logging in.")
     }else{
         res.status(400);
@@ -115,6 +115,12 @@ exports.getMe = asyncHandler(async(req, res) => {
             isAdmin : user.isAdmin,
             tjkfid: user.tjkfid,
             createdAt : user.createdAt,
+            maritalStatus: user.maritalStatus,
+            educationStatus : user.educationStatus,
+            employmentStatus : user.employmentStatus,
+            politicalInterest :  user.politicalInterest,
+            electoralParticipation : user.electoralParticipation,
+            profilePhoto : user.profilePhoto,
         }
         res.json({
             success : true,
@@ -217,7 +223,7 @@ exports.forgotPassword = asyncHandler(async(req, res) => {
                 },
                 (response,err)=>{
                     User.findById(user._id).then((user)=>{
-                        const resetURL = `https://team-jkf.netlify.app/resetPassword/${resetToken}`
+                        const resetURL = `https://team-jkf.netlify.app/tjkf/users/passwordReset/${resetToken}`
                         mailSender(resetURL, user, res,"Team JKF: Reset Password", "Team JKF: Reset Password", "You are receiving this mail because you or someone else has requested the reset of password" );
                     })
                 }
