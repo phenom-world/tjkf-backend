@@ -223,7 +223,7 @@ exports.forgotPassword = asyncHandler(async(req, res) => {
                 },
                 (response,err)=>{
                     User.findById(user._id).then((user)=>{
-                        const resetURL = `https://team-jkf.netlify.app/tjkf/users/passwordReset/${resetToken}`
+                        const resetURL = `https://team-jkf.netlify.app/tjkf/users/resetPassword/${resetToken}`
                         mailSender(resetURL, user, res,"Team JKF: Reset Password", "Team JKF: Reset Password", "You are receiving this mail because you or someone else has requested the reset of password" );
                     })
                 }
