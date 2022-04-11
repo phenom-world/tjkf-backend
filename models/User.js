@@ -89,11 +89,9 @@ const UserSchema = new mongoose.Schema({
     profilePhoto : {
         type: String,
         default : `https://www.pinpng.com/pngs/m/341-3415688_no-avatar-png-transparent-png.png`
-    },
-    timestamp : {
-        type : Date,
-        default : Date.now()
-    },
+    }
+}, {
+    timestamps: true
 })
 
 //Encrypt the password
