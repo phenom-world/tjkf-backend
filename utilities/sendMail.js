@@ -5,7 +5,7 @@ const { google } = require('googleapis');
 const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID , process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
 oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN})
 
-exports.sendMail = async(details, res) => {
+exports.sendMail = async(details, res, token) => {
     try {
         const transport = nodemailer.createTransport({
             service: "gmail",
@@ -21,7 +21,7 @@ exports.sendMail = async(details, res) => {
             html: details.html
         }
         const result = await transport.sendMail(mailOptions)
-        res.status(200).json({success : true, message: `Email sent`})
+        res.status(200).json({success : true, message: `Email sent`, token: token ? token: null})
         return result
     } catch (error) {
         res.status(401)

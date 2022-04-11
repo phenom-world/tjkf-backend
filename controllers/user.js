@@ -63,7 +63,8 @@ exports.verifyUser = asyncHandler(async(req, res) => {
             },
             (response,err)=>{
                 User.findById(id).then((user)=>{
-                    mailSender("", user, res,"Team JKF: Email Verification Successful", "Team JKF: Email Verification Successful", "Your account is now verified at Team JKF." );
+                    const token = generateToken(user._id)
+                    mailSender("", user, res,"Team JKF: Email Verification Successful", "Team JKF: Email Verification Successful", "Your account is now verified at Team JKF.", token );
                 }).catch(err=> {
                     res.status(401)
                     throw new Error(`${err}`);
@@ -279,7 +280,7 @@ function messageToBeSent (title, resetURL, user){
     }
 }
 
-function mailSender (resetURL, user, res, subject, title, body){
+function mailSender (resetURL, user, res, subject, title, body, token){
     sendMail({
         email: `${user.email}`,
         subject: `${subject}`,
@@ -293,5 +294,5 @@ function mailSender (resetURL, user, res, subject, title, body){
                     </div>
                 </div>
                 `
-    }, res);
+    }, res, token);
 }
