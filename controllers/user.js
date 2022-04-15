@@ -355,7 +355,7 @@ exports.getAllUsers = asyncHandler(async(req, res)=> {
                 isFriend : val
             }
         })
-        const filteredUsers = usersRequiredDetails.filter(me => me._id.toString() !== req.user._id.toString() )
+        const filteredUsers = usersRequiredDetails.filter(me => me.id.toString() !== req.user._id.toString() )
         res.status(200).json({success: true, data: filteredUsers})
     }catch(err){
         res.status(500);
