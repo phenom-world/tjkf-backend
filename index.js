@@ -15,6 +15,7 @@ const user = require('./routes/user');
 const team = require('./routes/team');
 const teammessage = require('./routes/teammessages');
 const request = require('./routes/request');
+const privatechat = require('./routes/privatechat');
 
 dotenv.config({path : './config/.env'})
 
@@ -51,6 +52,7 @@ app.use('/tjkf/users', user);
 app.use('/tjkf/teams', team);
 app.use('/tjkf/teammessages', teammessage);
 app.use('/tjkf/request', request);
+app.use('/tjkf/privatechat', privatechat );
 
 app.use(notFound);
 
