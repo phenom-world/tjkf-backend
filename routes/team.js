@@ -6,7 +6,7 @@ const {protect, admin} = require('../middlewares/auth')
 router.route('/create-team').post(protect, admin, createTeam);
 router.route("/getTeams").get(protect, getAllTeams);
 router.route("/getuserteams").get(protect, getUserTeams);
-router.route("/getTeam/:id").get(protect, getATeam);
-router.route("/addUser/:id").put(protect, admin, addUserToTeam);
+router.route("/getTeam/:teamname").get(protect, getATeam);
+router.route("/addUser").put(protect, admin, addUserToTeam);
 
 module.exports = router;
