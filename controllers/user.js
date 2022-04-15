@@ -76,28 +76,29 @@ exports.verifyUser = asyncHandler(async(req, res) => {
     const {token} = req.params;
     const id = verifyToken(token, res);
     if(id){
-        User.updateOne(
-            { _id : id},
-            {
-                $set: {
-                    isVerified: true
-                }
-            },
-            (response,err)=>{
-                User.findById(id).then((user)=>{
-                    if(!user.isVerified){
-                        const token = generateToken(user._id)
-                        mailSender("", user, res,"Team JKF: Email Verification Successful", "Team JKF: Email Verification Successful", "Your account is now verified at Team JKF.", token );
-                    }else{
-                        res.status(401)
-                        throw new Error(`User Already Verified`);
+        const getUser = await User.findById(id)
+        if(!getUser.isVerified){
+            User.updateOne(
+                { _id : id},
+                {
+                    $set: {
+                        isVerified: true
                     }
-                }).catch(err=> {
-                    res.status(401)
-                    throw new Error(`${err}`);
-                })
-            }
-        )
+                },
+                (response,err)=>{
+                    User.findById(id).then((user)=>{
+                            const token = generateToken(user._id)
+                            mailSender("", user, res,"Team JKF: Email Verification Successful", "Team JKF: Email Verification Successful", "Your account is now verified at Team JKF.", token );
+                    }).catch(err=> {
+                        res.status(401)
+                        throw new Error(`${err}`);
+                    })
+                }
+            )
+        }else{
+            res.status(401)
+            throw new Error(`User Already Verified`);
+        }
     }
 })
 
