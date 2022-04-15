@@ -48,6 +48,7 @@ exports.getATeam = asyncHandler(async(req, res) => {
     try{
         const team = await Team.findOne({teamname});
         const teamData = {
+            teamId : team._id,
             teamname : team.teamname,
             creator : team.creator,
             userNames:team.userNames,
@@ -67,6 +68,7 @@ exports.getAllTeams = asyncHandler(async(req, res) => {
         const teams = await Team.find({});
         const teamsData = teams.map(team =>{
             return {
+                teamId : team._id,
                 teamname : team.teamname,
                 creator : team.creator,
                 userNames:team.userNames,
@@ -110,6 +112,7 @@ exports.getUserTeams = asyncHandler(async(req, res)=>{
     })
     const teamsData = teams.map(team =>{
         return {
+            teamId : team._id,
             teamname : team.teamname,
             creator : team.creator,
             userNames:team.userNames,
