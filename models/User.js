@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 
 const UserSchema = new mongoose.Schema({
     firstname : {
@@ -89,6 +89,10 @@ const UserSchema = new mongoose.Schema({
     profilePhoto : {
         type: String,
         default : `https://www.pinpng.com/pngs/m/341-3415688_no-avatar-png-transparent-png.png`
+    },
+    friends : {
+        type : Array,
+        default : []
     }
 }, {
     timestamps: true

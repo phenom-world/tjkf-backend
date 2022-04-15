@@ -4,6 +4,7 @@ const { generateToken, verifyToken } = require('../utilities/generateToken.js');
 const bcrypt = require('bcryptjs');
 const { sendMail } = require('../utilities/sendMail.js');
 const crypto = require('crypto');
+const Team = require('../models/Team');
 
 exports.login = asyncHandler(async(req, res) => {
     const {username, password} = req.body
@@ -28,26 +29,46 @@ exports.login = asyncHandler(async(req, res) => {
 })
 
 exports.register = asyncHandler(async(req, res) => {
-    const {email, password, firstname, lastname, state, statecode, lga, phone, gender, username} = req.body
+    try{
+        const {email, password, firstname, lastname, state, statecode, lga, phone, gender, username} = req.body
     
-    const userExists = await User.findOne({username})
+        const userExists = await User.findOne({username });
+        const emailExists = await User.findOne({email });
 
-    if(userExists){
-        res.status(400)
-        throw new Error(`User already exists`)
+        if(userExists || emailExists){
+            res.status(400)
+            throw new Error(`User already exists`)
+        }
+
+        const user = await User.create({email, password, firstname, lastname, state, statecode, lga, phone, gender, username})
+
+        if(user){
+            const teamExists = await Team.findOne({statecode});
+            if(teamExists) {
+                Team.updateOne({statecode}, {
+                    $set : {
+                        userNames : [ ...teamExists.userNames, username ],
+                        userIds : [ ...teamExists.userIds, user._id.toString() ],
+                    }
+                }, (err, data)=>{
+                    if(err){
+                        res.status(500);
+                        throw new Error(`${err}`);
+                    }
+                })
+            }
+            const verifyToken = user.getSignedJwtToken();
+            const resetURL = `https://team-jkf.netlify.app/verify/${verifyToken}`
+            await mailSender(resetURL, user, res, "Team JKF: Email Verification", "Team JKF: Email Verification", "You must confirm/validate your Email Account before logging in.");
+        }else{
+            res.status(400);
+            throw new Error(`Invalid User data`);
+        }
+    }catch(err){
+        res.status(401);
+        throw new Error(`${err}`);
     }
-
-    const user = await User.create({email, password, firstname, lastname, state, statecode, lga, phone, gender, username})
-
-    if(user){
-        const verifyToken = user.getSignedJwtToken();
-        const resetURL = `https://team-jkf.netlify.app/verify/${verifyToken}`
-        mailSender(resetURL, user, res, "Team JKF: Email Verification", "Team JKF: Email Verification", "You must confirm/validate your Email Account before logging in.");
-        console.log(verifyToken);
-    }else{
-        res.status(400);
-        throw new Error(`Invalid User data`);
-    }
+    
 })
 
 exports.verifyUser = asyncHandler(async(req, res) => {
@@ -63,8 +84,13 @@ exports.verifyUser = asyncHandler(async(req, res) => {
             },
             (response,err)=>{
                 User.findById(id).then((user)=>{
-                    const token = generateToken(user._id)
-                    mailSender("", user, res,"Team JKF: Email Verification Successful", "Team JKF: Email Verification Successful", "Your account is now verified at Team JKF.", token );
+                    if(!user.isVerified){
+                        const token = generateToken(user._id)
+                        mailSender("", user, res,"Team JKF: Email Verification Successful", "Team JKF: Email Verification Successful", "Your account is now verified at Team JKF.", token );
+                    }else{
+                        res.status(401)
+                        throw new Error(`User Already Verified`);
+                    }
                 }).catch(err=> {
                     res.status(401)
                     throw new Error(`${err}`);
@@ -270,6 +296,69 @@ exports.resetPassword = asyncHandler(async(req, res) => {
     }
 })
 
+exports.getUser = asyncHandler(async(req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        const userData = {
+            id : user._id,
+            firstname : user.firstname,
+            username : user.username,
+            email : user.email,
+            lastname : user.lastname,
+            state : user.state,
+            statecode : user.statecode,
+            lga : user.lga,
+            phone : user.phone,
+            gender : user.gender,
+            tjkfid: user.tjkfid,
+            createdAt : user.createdAt,
+            profilePhoto : user.profilePhoto,
+        }
+        res.status(200).json({success: true, data: userData})
+    } catch (err) {
+        res.status(500);
+        throw new Error(err)
+    }
+})
+
+exports.getAllUsers = asyncHandler(async(req, res)=> {
+    try{
+        const users = await User.find({})
+        const usersRequiredDetails = users.map(user => {
+            return {
+                id : user._id,
+                firstname : user.firstname,
+                username : user.username,
+                email : user.email,
+                lastname : user.lastname,
+                state : user.state,
+                statecode : user.statecode,
+                lga : user.lga,
+                phone : user.phone,
+                gender : user.gender,
+                tjkfid: user.tjkfid,
+                createdAt : user.createdAt,
+                profilePhoto : user.profilePhoto,
+            }
+        })
+        res.status(200).json({success: true, data: usersRequiredDetails})
+    }catch(err){
+        res.status(500);
+        throw new Error(err)
+    }
+})
+
+exports.getFriends = asyncHandler(async(req,res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        
+        res.status(200).json({success: true, data: user.friends})
+    } catch (err) {
+        res.status(500);
+        throw new Error(err)
+    }
+} )
+
 function messageToBeSent (title, resetURL, user){
     if(title === "Team JKF: Email Verification"){
         return `<p>Please click on the following link to successfully activate your account:<a style="color:#c4c423;" href=${resetURL}>click here</a></p>`
@@ -280,8 +369,8 @@ function messageToBeSent (title, resetURL, user){
     }
 }
 
-function mailSender (resetURL, user, res, subject, title, body, token){
-    sendMail({
+const mailSender =  async(resetURL, user, res, subject, title, body, token) => {
+    await sendMail({
         email: `${user.email}`,
         subject: `${subject}`,
         html: `<div style="color:white;background-color:black" >
