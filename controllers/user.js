@@ -58,6 +58,7 @@ exports.register = asyncHandler(async(req, res) => {
                 })
             }
             const verifyToken = user.getSignedJwtToken();
+            console.log(verifyToken)
             const resetURL = `https://team-jkf.netlify.app/verify/${verifyToken}`
             await mailSender(resetURL, user, res, "Team JKF: Email Verification", "Team JKF: Email Verification", "You must confirm/validate your Email Account before logging in.");
         }else{
@@ -299,6 +300,11 @@ exports.resetPassword = asyncHandler(async(req, res) => {
 exports.getUser = asyncHandler(async(req, res) => {
     try {
         const user = await User.findById(req.params.userId);
+        const currentUser = await User.findById(req.user._id);
+        const isFriend = currentUser.friends.filter(friend => {
+            return friend._id.toString() === user._id.toString()
+        });
+        let val = isFriend.length > 0 ? true : false
         const userData = {
             id : user._id,
             firstname : user.firstname,
@@ -313,6 +319,7 @@ exports.getUser = asyncHandler(async(req, res) => {
             tjkfid: user.tjkfid,
             createdAt : user.createdAt,
             profilePhoto : user.profilePhoto,
+            isFriend : val
         }
         res.status(200).json({success: true, data: userData})
     } catch (err) {
@@ -324,7 +331,12 @@ exports.getUser = asyncHandler(async(req, res) => {
 exports.getAllUsers = asyncHandler(async(req, res)=> {
     try{
         const users = await User.find({})
+        const currentUser = await User.findById(req.user._id)
         const usersRequiredDetails = users.map(user => {
+            const isFriend = currentUser.friends.filter(friend => {
+                return friend._id.toString() === user._id.toString()
+            });
+            let val = isFriend.length > 0 ? true : false
             return {
                 id : user._id,
                 firstname : user.firstname,
@@ -339,9 +351,11 @@ exports.getAllUsers = asyncHandler(async(req, res)=> {
                 tjkfid: user.tjkfid,
                 createdAt : user.createdAt,
                 profilePhoto : user.profilePhoto,
+                isFriend : val
             }
         })
-        res.status(200).json({success: true, data: usersRequiredDetails})
+        const filteredUsers = usersRequiredDetails.filter(me => me._id.toString() !== req.user._id.toString() )
+        res.status(200).json({success: true, data: filteredUsers})
     }catch(err){
         res.status(500);
         throw new Error(err)
