@@ -44,9 +44,9 @@ exports.createTeam = asyncHandler(async(req, res) => {
 });
 
 exports.getATeam = asyncHandler(async(req, res) => {
-    const { teamname } = req.params;
+    const { id } = req.params;
     try{
-        const team = await Team.findOne({teamname});
+        const team = await Team.findById(id);
         const teamData = {
             teamId : team._id,
             teamname : team.teamname,
@@ -86,10 +86,11 @@ exports.getAllTeams = asyncHandler(async(req, res) => {
 })
 
 exports.addUserToTeam = asyncHandler(async(req, res) => {
-    const { teamname, username, userId } = req.body;
-    const teamExists = await Team.findOne({teamname});
+    const { id } = req.params;
+    const { username, userId } = req.body;
+    const teamExists = await Team.findById(id);
     if(teamExists) {
-        Team.updateOne({teamname}, {
+        Team.updateOne({_id: id}, {
             $set : {
                 userNames : [ ...teamExists.userNames, username ],
                 userIds : [ ...teamExists.userIds, userId ],
@@ -106,7 +107,6 @@ exports.addUserToTeam = asyncHandler(async(req, res) => {
 })
 
 exports.getUserTeams = asyncHandler(async(req, res)=>{
-    console.log(req.user._id)
     const teams = await Team.find({
         userIds: req.user._id.toString()
     })
