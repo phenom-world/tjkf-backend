@@ -8,9 +8,14 @@ const Team = require('../models/Team');
 const Relationships = require('../models/Relationship');
 
 exports.login = asyncHandler(async(req, res) => {
-    const {username, password} = req.body
+    const {username, password, isSocial, email} = req.body
     
-    const user = await User.findOne({username});
+    let user;
+    if(isSocial){
+        user = await User.findOne({email});
+    }else{
+        user = await User.findOne({username});
+    }
     
 
     if(user && (await user.matchPassword(password))){
@@ -27,11 +32,11 @@ exports.login = asyncHandler(async(req, res) => {
         res.status(401)
         throw new Error(`Invalid username or password`);
     }
-})
+});
 
 exports.register = asyncHandler(async(req, res) => {
     try{
-        const {email, password, firstname, lastname, state, statecode, lga, phone, gender, username} = req.body
+        const {email, password, firstname, lastname, state, statecode, lga, phone, gender, username, isSocial } = req.body
     
         const userExists = await User.findOne({username });
         const emailExists = await User.findOne({email });
@@ -40,8 +45,12 @@ exports.register = asyncHandler(async(req, res) => {
             res.status(400)
             throw new Error(`User already exists`)
         }
-
-        const user = await User.create({email, password, firstname, lastname, state, statecode, lga, phone, gender, username})
+        let user;
+        if(isSocial){
+            user = await User.create({email, password, firstname, lastname, state, statecode, lga, phone, gender, username, isVerified: true})
+        }else{
+            user = await User.create({email, password, firstname, lastname, state, statecode, lga, phone, gender, username})
+        }
 
         if(user){
             const teamExists = await Team.findOne({statecode});
@@ -58,10 +67,14 @@ exports.register = asyncHandler(async(req, res) => {
                     }
                 })
             }
-            const verifyToken = user.getSignedJwtToken();
-            console.log(verifyToken)
-            const resetURL = `https://team-jkf.netlify.app/verify/${verifyToken}`
-            await mailSender(resetURL, user, res, "Team JKF: Email Verification", "Team JKF: Email Verification", "You must confirm/validate your Email Account before logging in.");
+            if(isSocial){
+                res.status(200).json({ success: true, token: generateToken(user._id) })
+            }else{
+                const verifyToken = user.getSignedJwtToken();
+                console.log(verifyToken)
+                const resetURL = `https://team-jkf.netlify.app/verify/${verifyToken}`
+                await mailSender(resetURL, user, res, "Team JKF: Email Verification", "Team JKF: Email Verification", "You must confirm/validate your Email Account before logging in.");
+            }
         }else{
             res.status(400);
             throw new Error(`Invalid User data`);
