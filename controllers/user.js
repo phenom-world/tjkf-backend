@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const { sendMail } = require('../utilities/sendMail.js');
 const crypto = require('crypto');
 const Team = require('../models/Team');
+const Relationships = require('../models/Relationship');
 
 exports.login = asyncHandler(async(req, res) => {
     const {username, password} = req.body
@@ -302,10 +303,14 @@ exports.getUser = asyncHandler(async(req, res) => {
     try {
         const user = await User.findById(req.params.userId);
         const currentUser = await User.findById(req.user._id);
+        const request =  await Relationships.find({
+            partiesInvolved : { $all: [req.params.userId, req.user._id.toString()] },
+        });
         const isFriend = currentUser.friends.filter(friend => {
             return friend._id.toString() === user._id.toString()
         });
-        let val = isFriend.length > 0 ? true : false
+        let val = isFriend.length > 0 ? true : false;
+        const isRequest = request.length > 0 ? req.user._id === request.toId ? "Request Received" : "Request Sent" : "No Request";
         const userData = {
             id : user._id,
             firstname : user.firstname,
@@ -320,7 +325,8 @@ exports.getUser = asyncHandler(async(req, res) => {
             tjkfid: user.tjkfid,
             createdAt : user.createdAt,
             profilePhoto : user.profilePhoto,
-            isFriend : val
+            isFriend : val,
+            isRequest
         }
         res.status(200).json({success: true, data: userData})
     } catch (err) {
@@ -333,11 +339,15 @@ exports.getAllUsers = asyncHandler(async(req, res)=> {
     try{
         const users = await User.find({})
         const currentUser = await User.findById(req.user._id)
-        const usersRequiredDetails = users.map(user => {
+        const usersRequiredDetails = await Promise.all(users.map(async (user) => {
             const isFriend = currentUser.friends.filter(friend => {
                 return friend._id.toString() === user._id.toString()
             });
-            let val = isFriend.length > 0 ? true : false
+            const request = await Relationships.find({
+                partiesInvolved : { $all: [user._id.toString(), req.user._id.toString()] },
+            });
+            let val = isFriend.length > 0 ? true : false;
+            const isRequest = request.length > 0 ? req.user._id === request.toId ? "Request Received" : "Request Sent" : "No Request";
             return {
                 id : user._id,
                 firstname : user.firstname,
@@ -352,9 +362,11 @@ exports.getAllUsers = asyncHandler(async(req, res)=> {
                 tjkfid: user.tjkfid,
                 createdAt : user.createdAt,
                 profilePhoto : user.profilePhoto,
-                isFriend : val
+                isFriend : val,
+                isRequest
             }
-        })
+        }))
+
         const filteredUsers = usersRequiredDetails.filter(me => me.id.toString() !== req.user._id.toString() )
         res.status(200).json({success: true, data: filteredUsers})
     }catch(err){

@@ -5,13 +5,10 @@ const asyncHandler = require('express-async-handler');
 exports.sendMessage = asyncHandler(async(req, res) => {
     req.body.team = req.params.id;
     req.body.username = req.user.username;
-    Team.findById(req.params.id,(err, data) => {
-        if(err){
-            res.status(500);
-            throw new Error(err);
-        }
-        else if(data){
-            if(data.userNames.includes(req.body.username)){
+    try{
+        const team = await Team.findById(req.params.id);
+        if(team){
+            if(team.userNames.includes(req.body.username)){
                 TeamMessage.create(req.body,(err, message) => {
                     if(err)res.status(500).send(err)
                     else{
@@ -19,11 +16,17 @@ exports.sendMessage = asyncHandler(async(req, res) => {
                     }
                 });
             }else{
-                res.status(500);
+                res.status(403);
                 throw new Error("Not Authorized to send message to this group");
             }
+        }else{
+            res.status(404);
+            throw new Error("Team does not exist");
         }
-    })
+    }catch(err){
+        res.status(400);
+        throw new Error(`${err}`);
+    }
 });
 
 exports.getMessageByRoom = asyncHandler(async(req, res) => {
