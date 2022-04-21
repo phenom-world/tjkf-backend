@@ -15,7 +15,7 @@ router.route("/leaveteam").put(protect, leaveTeam );
 router.route("/getTeamRequests").get(protect, admin, getTeamRequests);
 router.route("/getAllRequests").get(protect, admin, getAllRequests);
 router.route("/getMemberRequests").get(protect, getMemberRequests);
-router.route("/sendTeamRequest").post(protect, sendTeamRequest);
+router.route("/sendTeamRequest/:teamname").post(protect, sendTeamRequest);
 
 
 module.exports = router;

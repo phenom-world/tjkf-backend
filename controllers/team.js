@@ -1,4 +1,5 @@
 const Team = require('../models/Team');
+const Teamrequests = require('../models/TeamRequest');
 const asyncHandler = require('express-async-handler');
 
 
@@ -102,19 +103,28 @@ exports.addUserToTeam = asyncHandler(async(req, res) => {
         const teamExists = await Team.findOne({teamname});
         if(teamExists) {
             if(!teamExists.userNames.includes(username) && !teamExists.userIds.includes(userId.toString())){
-                Team.updateOne({teamname}, {
-                    $set : {
-                        userNames : [ ...teamExists.userNames, username ],
-                        userIds : [ ...teamExists.userIds, userId.toString() ],
-                    }
-                }, (err, data)=>{
-                    if(err){
-                        res.status(500);
-                        throw new Error(err);
-                    }else{
-                        res.status(200).json({ success: true, message: "User successfully added to the team."});
-                    }
+                const request = await Teamrequests.findOne({
+                    $and: [{username}, {userId: userId.toString()}, {teamname}],
                 })
+                if(request){
+                    await request.delete()
+                    Team.updateOne({teamname}, {
+                        $set : {
+                            userNames : [ ...teamExists.userNames, username ],
+                            userIds : [ ...teamExists.userIds, userId.toString() ],
+                        }
+                    }, (err, data)=>{
+                        if(err){
+                            res.status(500);
+                            throw new Error(err);
+                        }else{
+                            res.status(200).json({ success: true, message: "User successfully added to the team."});
+                        }
+                    })
+                }else{
+                    res.status(404);
+                    throw new Error("Request to join the team not found");
+                }
             }else{
                 res.status(400);
                 throw new Error("Already a member of this team");
@@ -137,7 +147,7 @@ exports.leaveTeam = asyncHandler(async(req, res) => {
         if(teamExists) {
             if(teamExists.userNames.includes(username) && teamExists.userIds.includes(_id.toString())){
                 await teamExists.updateOne({ $pull: { userNames: username, userIds: _id.toString() } });
-                res.status(200).json("Successfully Left the team");
+                res.status(200).json({success: true, message:"Successfully Left the team"});
             }else{
                 res.status(400);
                 throw new Error("Not a member of this team");

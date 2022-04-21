@@ -1,5 +1,5 @@
 const teams = [{
-    "teamname": "TEAM ABIA",
+    "teamname": "TEAMJKF ABIA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat",
@@ -11,7 +11,7 @@ const teams = [{
     ],
     "statecode": "01"
   },{
-    "teamname": "TEAM ADAMAWA",
+    "teamname": "TEAMJKF ADAMAWA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat",
@@ -23,7 +23,7 @@ const teams = [{
     ],
     "statecode": "02"
   },{
-    "teamname": "TEAM AKWA-IBOM",
+    "teamname": "TEAMJKF AKWA-IBOM",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -33,7 +33,7 @@ const teams = [{
     ],
     "statecode": "03"
   },{
-    "teamname": "TEAM ANAMBRA",
+    "teamname": "TEAMJKF ANAMBRA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -43,7 +43,7 @@ const teams = [{
     ],
     "statecode": "04"
   },{
-    "teamname": "TEAM BAUCHI",
+    "teamname": "TEAMJKF BAUCHI",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -53,7 +53,7 @@ const teams = [{
     ],
     "statecode": "05"
   },{
-    "teamname": "TEAM BAYELSA",
+    "teamname": "TEAMJKF BAYELSA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -63,7 +63,7 @@ const teams = [{
     ],
     "statecode": "06"
   },{
-    "teamname": "TEAM BENUE",
+    "teamname": "TEAMJKF BENUE",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -73,7 +73,7 @@ const teams = [{
     ],
     "statecode": "07"
   },{
-    "teamname": "TEAM BORNO",
+    "teamname": "TEAMJKF BORNO",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -83,7 +83,7 @@ const teams = [{
     ],
     "statecode": "08"
   },{
-    "teamname": "TEAM CROSS-RIVER",
+    "teamname": "TEAMJKF CROSS-RIVER",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -93,7 +93,7 @@ const teams = [{
     ],
     "statecode": "09"
   },{
-    "teamname": "TEAM DELTA",
+    "teamname": "TEAMJKF DELTA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -103,7 +103,7 @@ const teams = [{
     ],
     "statecode": "010"
   },{
-    "teamname": "TEAM EBONYI",
+    "teamname": "TEAMJKF EBONYI",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -113,7 +113,7 @@ const teams = [{
     ],
     "statecode": "011"
   },{
-    "teamname": "TEAM EDO",
+    "teamname": "TEAMJKF EDO",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -123,7 +123,7 @@ const teams = [{
     ],
     "statecode": "012"
   },{
-    "teamname": "TEAM EKITI",
+    "teamname": "TEAMJKF EKITI",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -133,7 +133,7 @@ const teams = [{
     ],
     "statecode": "013"
   },{
-    "teamname": "TEAM ENUGU",
+    "teamname": "TEAMJKF ENUGU",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -143,7 +143,7 @@ const teams = [{
     ],
     "statecode": "014"
   },{
-    "teamname": "TEAM GOMBE",
+    "teamname": "TEAMJKF GOMBE",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -153,7 +153,7 @@ const teams = [{
     ],
     "statecode": "015"
   },{
-    "teamname": "TEAM IMO",
+    "teamname": "TEAMJKF IMO",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -163,7 +163,7 @@ const teams = [{
     ],
     "statecode": "016"
   },{
-    "teamname": "TEAM JIGAWA",
+    "teamname": "TEAMJKF JIGAWA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -173,7 +173,7 @@ const teams = [{
     ],
     "statecode": "017"
   },{
-    "teamname": "TEAM KADUNA",
+    "teamname": "TEAMJKF KADUNA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -183,7 +183,7 @@ const teams = [{
     ],
     "statecode": "018"
   },{
-    "teamname": "TEAM KANO",
+    "teamname": "TEAMJKF KANO",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -193,7 +193,7 @@ const teams = [{
     ],
     "statecode": "019"
   },{
-    "teamname": "TEAM KATSINA",
+    "teamname": "TEAMJKF KATSINA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -203,7 +203,7 @@ const teams = [{
     ],
     "statecode": "020"
   },{
-    "teamname": "TEAM KEBBI",
+    "teamname": "TEAMJKF KEBBI",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -213,7 +213,7 @@ const teams = [{
     ],
     "statecode": "021"
   },{
-    "teamname": "TEAM KOGI",
+    "teamname": "TEAMJKF KOGI",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -223,7 +223,7 @@ const teams = [{
     ],
     "statecode": "022"
   },{
-    "teamname": "TEAM KWARA",
+    "teamname": "TEAMJKF KWARA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -233,7 +233,7 @@ const teams = [{
     ],
     "statecode": "023"
   },{
-    "teamname": "TEAM LAGOS",
+    "teamname": "TEAMJKF LAGOS",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -243,7 +243,7 @@ const teams = [{
     ],
     "statecode": "024"
   },{
-    "teamname": "TEAM NASARAWA",
+    "teamname": "TEAMJKF NASARAWA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -253,7 +253,7 @@ const teams = [{
     ],
     "statecode": "025"
   },{
-    "teamname": "TEAM NIGER",
+    "teamname": "TEAMJKF NIGER",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -263,7 +263,7 @@ const teams = [{
     ],
     "statecode": "026"
   },{
-    "teamname": "TEAM OGUN",
+    "teamname": "TEAMJKF OGUN",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -273,7 +273,7 @@ const teams = [{
     ],
     "statecode": "027"
   },{
-    "teamname": "TEAM ONDO",
+    "teamname": "TEAMJKF ONDO",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat",
@@ -285,7 +285,7 @@ const teams = [{
     ],
     "statecode": "028"
   },{
-    "teamname": "TEAM OSUN",
+    "teamname": "TEAMJKF OSUN",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -295,7 +295,7 @@ const teams = [{
     ],
     "statecode": "029"
   },{
-    "teamname": "TEAM OYO",
+    "teamname": "TEAMJKF OYO",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -305,7 +305,7 @@ const teams = [{
     ],
     "statecode": "030"
   },{
-    "teamname": "TEAM PLATEAU",
+    "teamname": "TEAMJKF PLATEAU",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -315,7 +315,7 @@ const teams = [{
     ],
     "statecode": "031"
   },{
-    "teamname": "TEAM RIVERS",
+    "teamname": "TEAMJKF RIVERS",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -325,7 +325,7 @@ const teams = [{
     ],
     "statecode": "032"
   },{
-    "teamname": "TEAM SOKOTO",
+    "teamname": "TEAMJKF SOKOTO",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -335,7 +335,7 @@ const teams = [{
     ],
     "statecode": "033"
   },{
-    "teamname": "TEAM TARABA",
+    "teamname": "TEAMJKF TARABA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -345,7 +345,7 @@ const teams = [{
     ],
     "statecode": "034"
   },{
-    "teamname": "TEAM YOBE",
+    "teamname": "TEAMJKF YOBE",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -355,7 +355,7 @@ const teams = [{
     ],
     "statecode": "035"
   },{
-    "teamname": "TEAM ZAMFARA",
+    "teamname": "TEAMJKF ZAMFARA",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"
@@ -365,7 +365,7 @@ const teams = [{
     ],
     "statecode": "036"
   },{
-    "teamname": "TEAM FCT",
+    "teamname": "TEAMJKF FCT",
     "creator": "valodagreat",
     "userNames": [
       "valodagreat"

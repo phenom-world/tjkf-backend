@@ -3,20 +3,21 @@ const Teamrequests = require('../models/TeamRequest');
 const Team = require('../models/Team');
 
 exports.sendTeamRequest = asyncHandler(async(req, res) => {
-    const { teamname, username, userId } = req.body
+    const { username, _id } = req.user
+    const { teamname } = req.params
     try{
-        if(teamname && username && userId){
+        if(teamname && username && _id){
             const team = await Team.findOne({teamname});
             if(team){
-                if(!team.userNames.includes(username) && !team.userIds.includes(userId.toString())){
+                if(!team.userNames.includes(username) && !team.userIds.includes(_id.toString())){
                     const request = await Teamrequests.findOne({
-                        $and: [{username}, {userId}, {teamname}],
-                    })
+                        $and: [{username}, {userId: _id.toString()}, {teamname}],
+                    });
                     if(request){
                         res.status(400);
                         throw new Error("Pending Request")
                     }else{
-                        const newRequest = await Teamrequests.create({teamname, username, userId: userId.toString()});
+                        const newRequest = await Teamrequests.create({teamname, username, userId: _id.toString()});
                         res.status(200).json({success: true, data:newRequest })
                     }
                 }else{
