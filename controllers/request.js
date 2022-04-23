@@ -3,10 +3,7 @@ const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
 
 exports.addFriend = asyncHandler(async (req, res) => {
-  if (
-    req.user._id.toString() === req.body.fromId &&
-    req.body.fromId !== req.body.toId
-  ) {
+  if (req.user._id.toString() === req.body.fromId && req.body.fromId !== req.body.toId) {
     const request = await Relationships.find({
       partiesInvolved: { $all: [req.body.fromId, req.body.toId] },
     });
@@ -51,10 +48,7 @@ exports.acceptRequest = asyncHandler(async (req, res) => {
   if (req.user._id.toString() === req.body.toId) {
     try {
       const request = await Relationships.find({
-        $and: [
-          { toId: req.user._id },
-          { partiesInvolved: { $all: [req.body.fromId, req.body.toId] } },
-        ],
+        $and: [{ toId: req.user._id }, { partiesInvolved: { $all: [req.body.fromId, req.body.toId] } }],
       });
       if (request.length > 0) {
         const currentUser = await User.findById(request[0].toId);
@@ -107,10 +101,7 @@ exports.acceptRequest = asyncHandler(async (req, res) => {
 
 exports.rejectRequest = asyncHandler(async (req, res) => {
   const request = await Relationships.find({
-    $and: [
-      { $or: [{ toId: req.user._id }, { fromId: req.user._id }] },
-      { partiesInvolved: { $all: [req.body.fromId, req.body.toId] } },
-    ],
+    $and: [{ $or: [{ toId: req.user._id }, { fromId: req.user._id }] }, { partiesInvolved: { $all: [req.body.fromId, req.body.toId] } }],
   });
   if (request.length > 0) {
     await Relationships.findOneAndDelete({
@@ -118,9 +109,7 @@ exports.rejectRequest = asyncHandler(async (req, res) => {
         $all: [req.body.fromId, req.body.toId],
       },
     });
-    res
-      .status(200)
-      .json({ success: true, message: "Request successfully cancelled" });
+    res.status(200).json({ success: true, message: "Request successfully cancelled" });
   } else {
     res.status(403);
     throw new Error(`Request does not exist`);
