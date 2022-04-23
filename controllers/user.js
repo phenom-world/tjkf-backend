@@ -323,7 +323,7 @@ exports.getUser = asyncHandler(async(req, res) => {
             return friend._id.toString() === user._id.toString()
         });
         let val = isFriend.length > 0 ? true : false;
-        const isRequest = request.length > 0 ? req.user._id === request.toId ? "Request Received" : "Request Sent" : "No Request";
+        const isRequest = request.length > 0 ? req.user._id.toString() === request.toId.toString() ? "Pending Request" : "Request Sent" : "Add Friend"
         const userData = {
             id : user._id,
             firstname : user.firstname,
